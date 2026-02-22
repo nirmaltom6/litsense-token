@@ -7,12 +7,12 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: {
-        default: "Litsense Token System — Healthcare Queue Management",
-        template: "%s | Litsense Token System",
+        default: "Litsense Healthineers | Advanced Anaesthesia Solutions",
+        template: "%s | Litsense Healthineers",
     },
     description:
-        "Multi-tenant SaaS token queue management for hospitals. RBAC, real-time tracking, multi-doctor support.",
-    keywords: ["hospital queue", "token management", "healthcare", "multi-tenant", "SaaS"],
+        "Premium anaesthesia and healthcare queue management by Litsense Healthineers.",
+    keywords: ["Litsense Healthineers", "anaesthesia solutions", "hospital queue", "token management", "Litsense"],
 };
 
 export default function RootLayout({

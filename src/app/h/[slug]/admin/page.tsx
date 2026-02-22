@@ -10,6 +10,7 @@ import {
     Building2, ChevronLeft, Clock, CheckCircle2, AlertCircle,
     RefreshCw, X, Ticket
 } from "lucide-react";
+import Logo from "@/components/Logo";
 
 interface DoctorData {
     _id: string;
@@ -135,12 +136,10 @@ export default function HospitalAdminDashboard() {
     return (
         <div className="min-h-screen bg-background text-foreground flex flex-col">
             <header className="h-14 flex items-center px-6 border-b sticky top-0 z-30" style={{ background: "hsl(222,47%,9%,0.9)", backdropFilter: "blur(12px)" }}>
-                <Link href="/login" className="flex items-center gap-2 text-muted hover:text-foreground transition-colors mr-4">
+                <Link href="/login" className="flex items-center gap-2 text-muted hover:text-foreground transition-all hover:scale-[1.02] mr-4">
                     <ChevronLeft className="h-4 w-4" />
-                    <div className="h-6 w-6 rounded flex items-center justify-center" style={{ background: brandColor }}>
-                        <Building2 className="h-4 w-4 text-white" />
-                    </div>
-                    <span className="font-black">{hospitalName || "Hospital"}</span>
+                    <Logo className="h-8" />
+                    <span className="font-black text-sm border-l pl-3 ml-1" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>{hospitalName || "Hospital"}</span>
                 </Link>
                 <span className="text-muted text-sm mr-auto">/ Admin Panel</span>
                 <span className="text-sm text-muted mr-4">{user.name}</span>

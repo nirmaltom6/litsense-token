@@ -103,7 +103,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem("litsense_user");
         sessionStorage.clear();
         setUser(null);
-        router.push("/login");
+        router.push("/");
     }, [router]);
 
     return (

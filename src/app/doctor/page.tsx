@@ -8,8 +8,10 @@ import { fetchApi } from "@/lib/api";
 import { Token, Doctor } from "@/lib/types";
 import {
   Activity, BellRing, CheckCircle2, UserX, SkipForward, Clock,
-  ChevronLeft, RefreshCw, Timer, Stethoscope, AlertTriangle
+  ChevronLeft, RefreshCw, Timer, Stethoscope, AlertTriangle, LogOut
 } from "lucide-react";
+import { useAuth } from "@/lib/AuthContext";
+import Logo from "@/components/Logo";
 
 function ElapsedTimer({ startedAt }: { startedAt?: string }) {
   const [elapsed, setElapsed] = useState("0:00");
@@ -29,6 +31,7 @@ function ElapsedTimer({ startedAt }: { startedAt?: string }) {
 }
 
 export default function DoctorDashboard() {
+  const { logout } = useAuth();
   const { doctors } = useDoctors();
   const [selectedDoctor, setSelectedDoctor] = useState("");
   const { queue, refresh, loading } = useTokenQueue(selectedDoctor, 3000);
@@ -82,14 +85,9 @@ export default function DoctorDashboard() {
         style={{ background: "hsl(222,47%,9%,0.9)", backdropFilter: "blur(12px)" }}
       >
         <div className="flex items-center gap-4 flex-1">
-          <Link href="/" className="flex items-center gap-2 text-muted hover:text-foreground transition-colors">
+          <Link href="/" className="flex items-center gap-2 text-muted hover:text-foreground transition-all hover:scale-[1.02]">
             <ChevronLeft className="h-4 w-4" />
-            <div className="flex items-center gap-1.5">
-              <div className="h-6 w-6 rounded bg-accent flex items-center justify-center">
-                <Activity className="h-4 w-4 text-white" />
-              </div>
-              <span className="font-black text-foreground">LITSENSE</span>
-            </div>
+            <Logo className="h-8" />
           </Link>
           <span className="text-muted text-sm">/ Clinical Panel</span>
         </div>
@@ -107,6 +105,14 @@ export default function DoctorDashboard() {
             <option key={d._id} value={d._id}>{d.name} — Room {d.roomNumber}</option>
           ))}
         </select>
+
+        <button
+          onClick={logout}
+          className="p-2 text-muted hover:text-red-400 transition-colors ml-4"
+          title="Logout"
+        >
+          <LogOut className="h-4 w-4" />
+        </button>
       </header>
 
       {!selectedDoctor ? (

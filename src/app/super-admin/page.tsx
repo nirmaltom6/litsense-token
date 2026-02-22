@@ -8,6 +8,7 @@ import {
     Stethoscope, Ticket, ChevronRight, Settings, Eye, EyeOff,
     AlertCircle, CheckCircle2, RefreshCw, X
 } from "lucide-react";
+import Logo from "@/components/Logo";
 
 interface HospitalData {
     _id: string;
@@ -138,12 +139,10 @@ export default function SuperAdminDashboard() {
         <div className="min-h-screen bg-background text-foreground flex flex-col">
             {/* Header */}
             <header className="h-14 flex items-center px-6 border-b sticky top-0 z-30" style={{ background: "hsl(222,47%,9%,0.9)", backdropFilter: "blur(12px)" }}>
-                <div className="flex items-center gap-3 mr-auto">
-                    <div className="h-8 w-8 rounded-lg bg-red-600 flex items-center justify-center">
-                        <Shield className="h-5 w-5 text-white" />
-                    </div>
-                    <div>
-                        <span className="font-black text-lg">Super Admin</span>
+                <div className="flex items-center gap-3 mr-auto group transition-all">
+                    <Logo className="h-8" />
+                    <div className="border-l pl-3 ml-1" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+                        <span className="font-black text-lg text-primary-500">Super Admin</span>
                         <span className="text-xs text-muted ml-2">({user.name})</span>
                     </div>
                 </div>

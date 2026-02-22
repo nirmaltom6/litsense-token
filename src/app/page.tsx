@@ -1,11 +1,8 @@
 import Link from "next/link";
 import { ArrowRight, Activity, Users, Clock, ShieldCheck, Zap, BarChart2, QrCode, ChevronRight, Star } from "lucide-react";
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-    title: "Litsense — Healthcare Queue Management",
-    description: "Surgical-precision token queue management for modern hospitals.",
-};
+import Logo from "@/components/Logo";
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
 
 const features = [
     {
@@ -14,12 +11,12 @@ const features = [
         desc: "Sub-5-second polling keeps every screen instantly synchronised — from reception to patient's phone.",
     },
     {
-        icon: <Users className="h-6 w-6 text-accent" />,
+        icon: <Users className="h-6 w-6 text-primary-500" />,
         title: "Smart Priority Queuing",
         desc: "Our hybrid algorithm weights emergencies, appointment slots, and walk-ins to serve everyone fairly.",
     },
     {
-        icon: <QrCode className="h-6 w-6 text-warning" />,
+        icon: <QrCode className="h-6 w-6 text-primary-500" />,
         title: "Patient Self-Serve",
         desc: "Each token generates a live-track link. Patients monitor their queue position from anywhere.",
     },
@@ -29,14 +26,14 @@ const features = [
         desc: "Secure terminals for Reception, Doctors, and Public Displays — each built for their exact workflow.",
     },
     {
-        icon: <BarChart2 className="h-6 w-6 text-accent" />,
-        title: "Live Analytics",
+        icon: <BarChart2 className="h-6 w-6 text-primary-500" />,
+        title: "Clinical Analytics",
         desc: "At-a-glance stats: patients served, avg wait times, and active queue depth — no page reload needed.",
     },
     {
-        icon: <Clock className="h-6 w-6 text-warning" />,
+        icon: <Clock className="h-6 w-6 text-primary-500" />,
         title: "Wait Time Estimates",
-        desc: "AI-calculated estimates per token help patients plan their time and reduce anxiety.",
+        desc: "Engineering-grade estimates help patients plan their time and reduce anxiety.",
     },
 ];
 
@@ -51,187 +48,81 @@ const steps = [
 
 const stats = [
     { value: "< 5s", label: "Update Latency" },
-    { value: "21", label: "API Endpoints" },
-    { value: "3", label: "Role Dashboards" },
-    { value: "∞", label: "Patients Supported" },
+    { value: "24/7", label: "Uptime Stability" },
+    { value: "256-bit", label: "Encryption" },
+    { value: "10k+", label: "Tokens/Day" },
 ];
 
 export default function Home() {
     return (
         <div className="min-h-screen bg-background text-foreground flex flex-col">
-            {/* Navbar */}
-            <header
-                className="px-6 h-16 flex items-center justify-between border-b sticky top-0 z-50"
-                style={{ background: "hsl(222,47%,9%,0.85)", backdropFilter: "blur(16px)" }}
-            >
-                <Link href="/" className="flex items-center gap-2 group">
-                    <div className="h-8 w-8 rounded-lg bg-primary-500 flex items-center justify-center">
-                        <Activity className="h-5 w-5 text-white" />
-                    </div>
-                    <span className="font-black text-xl tracking-tight">LITSENSE</span>
-                </Link>
-                <nav className="hidden md:flex gap-6 text-sm font-medium">
-                    <a href="#features" className="text-muted hover:text-foreground transition-colors">Features</a>
-                    <a href="#how-it-works" className="text-muted hover:text-foreground transition-colors">How it Works</a>
-                    <a href="#stats" className="text-muted hover:text-foreground transition-colors">Stats</a>
-                </nav>
-                <div className="flex items-center gap-3">
-                    <Link href="/reception" className="text-sm font-medium text-muted hover:text-foreground transition-colors hidden md:block">
-                        Reception
-                    </Link>
-                    <Link
-                        href="/doctor"
-                        className="text-sm font-medium bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-md transition-colors"
-                    >
-                        Doctor Panel
-                    </Link>
-                </div>
-            </header>
+            <Navbar />
 
             <main className="flex-1">
-                {/* Hero */}
-                <section className="relative px-6 py-28 md:py-40 overflow-hidden flex flex-col items-center text-center">
-                    {/* Background blobs */}
-                    <div
-                        className="absolute inset-0 -z-10"
-                        style={{
-                            background:
-                                "radial-gradient(ellipse 80% 50% at 50% -20%, hsl(199,89%,48%,0.15), transparent), radial-gradient(ellipse 60% 40% at 80% 60%, hsl(160,84%,39%,0.08), transparent)",
-                        }}
-                    />
-                    <div
-                        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full -z-10"
-                        style={{ background: "hsl(199,89%,48%,0.05)", filter: "blur(80px)" }}
-                    />
-
-                    <div className="inline-flex items-center gap-2 bg-primary-500/10 border border-primary-500/20 text-primary-500 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-8">
-                        <span className="h-2 w-2 rounded-full bg-accent animate-pulse"></span>
-                        Healthcare-Grade Queue Management
-                    </div>
-
-                    <h1 className="text-5xl md:text-7xl font-black tracking-tight max-w-4xl leading-[1.05]">
-                        Surgical Precision in{" "}
-                        <span
-                            className="text-transparent bg-clip-text"
-                            style={{ backgroundImage: "linear-gradient(135deg, hsl(199,89%,60%), hsl(160,84%,55%))" }}
-                        >
-                            Queue Management
-                        </span>
-                    </h1>
-
-                    <p className="mt-6 text-lg md:text-xl text-muted max-w-2xl leading-relaxed">
-                        Eliminate waiting-room chaos. Our token system keeps patients informed, doctors efficient, and clinics running{" "}
-                        <span className="text-foreground font-semibold">flawlessly</span>.
-                    </p>
-
-                    <div className="mt-10 flex flex-col sm:flex-row gap-4">
-                        <Link
-                            href="/reception"
-                            className="inline-flex h-12 items-center justify-center rounded-lg bg-primary-500 hover:bg-primary-600 px-8 text-sm font-bold text-white shadow-lg transition-all hover:shadow-primary-500/30 hover:shadow-2xl hover:-translate-y-0.5"
-                        >
-                            Open Reception Dashboard
-                        </Link>
-                        <Link
-                            href="/display"
-                            className="inline-flex h-12 items-center justify-center rounded-lg border px-8 text-sm font-medium transition-all hover:border-white/20 hover:-translate-y-0.5"
-                            style={{ background: "hsl(217,33%,17%)" }}
-                        >
-                            View Public Display <ArrowRight className="ml-2 h-4 w-4" />
-                        </Link>
-                    </div>
-
-                    {/* Quick access pills */}
-                    <div className="mt-12 flex flex-wrap justify-center gap-3">
-                        {[
-                            { href: "/reception", label: "Reception", emoji: "🏥" },
-                            { href: "/doctor", label: "Doctor Panel", emoji: "👨‍⚕️" },
-                            { href: "/display", label: "Public Display", emoji: "📺" },
-                        ].map((item) => (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className="flex items-center gap-2 text-sm font-medium text-muted border rounded-full px-4 py-2 hover:border-primary-500/40 hover:text-foreground transition-all"
-                                style={{ background: "hsl(217,33%,17%,0.5)" }}
-                            >
-                                <span>{item.emoji}</span> {item.label} <ChevronRight className="h-3 w-3" />
-                            </Link>
-                        ))}
-                    </div>
-                </section>
+                <Hero />
 
                 {/* Stats */}
-                <section id="stats" className="border-y py-12 px-6" style={{ background: "hsl(217,33%,14%)" }}>
-                    <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
+                <section id="stats" className="border-y py-12 px-6 bg-surface">
+                    <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
                         {stats.map((s) => (
                             <div key={s.label} className="text-center">
-                                <p
-                                    className="text-4xl font-black text-transparent bg-clip-text"
-                                    style={{ backgroundImage: "linear-gradient(135deg, hsl(199,89%,60%), hsl(160,84%,55%))" }}
-                                >
+                                <p className="text-4xl font-black text-primary-500">
                                     {s.value}
                                 </p>
-                                <p className="text-sm text-muted mt-1 font-medium">{s.label}</p>
+                                <p className="text-sm text-muted mt-1 font-bold uppercase tracking-wider">{s.label}</p>
                             </div>
                         ))}
                     </div>
                 </section>
 
                 {/* Features */}
-                <section id="features" className="py-24 px-6">
+                <section id="features" className="py-24 px-6 bg-background">
                     <div className="max-w-6xl mx-auto">
                         <div className="text-center mb-16">
-                            <p className="text-primary-500 text-sm font-bold uppercase tracking-widest mb-3">Features</p>
-                            <h2 className="text-3xl md:text-4xl font-black">Healthcare-Grade Infrastructure</h2>
-                            <p className="text-muted mt-4 max-w-xl mx-auto">
-                                Every component is purpose-built for the fast, high-stakes environment of a modern clinic.
+                            <p className="text-primary-500 text-sm font-bold uppercase tracking-widest mb-3">Litsense Healthineers</p>
+                            <h2 className="text-3xl md:text-5xl font-black tracking-tight">Clinical-Grade Infrastructure</h2>
+                            <p className="text-muted mt-4 max-w-xl mx-auto text-lg leading-relaxed">
+                                Advanced clinical workflows by Litsense. Stable, secure, and infinitely scalable.
                             </p>
                         </div>
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {features.map((f, i) => (
                                 <div
                                     key={i}
-                                    className="card border transition-all duration-300 group hover:border-primary-500/40 hover:-translate-y-1"
-                                    style={{ background: "linear-gradient(135deg, hsl(217,33%,17%), hsl(217,33%,15%))" }}
+                                    className="p-8 rounded-2xl border bg-card transition-all duration-300 group hover:border-primary-500 hover:shadow-xl"
                                 >
                                     <div
-                                        className="h-12 w-12 rounded-xl flex items-center justify-center mb-4 border"
-                                        style={{ background: "hsl(217,33%,22%)" }}
+                                        className="h-14 w-14 rounded-2xl flex items-center justify-center mb-6 bg-primary-500 text-white shadow-lg shadow-primary-500/20"
                                     >
                                         {f.icon}
                                     </div>
-                                    <h3 className="text-lg font-bold mb-2 group-hover:text-primary-500 transition-colors">{f.title}</h3>
-                                    <p className="text-muted text-sm leading-relaxed">{f.desc}</p>
+                                    <h3 className="text-xl font-bold mb-3 group-hover:text-primary-500 transition-colors">{f.title}</h3>
+                                    <p className="text-muted leading-relaxed">{f.desc}</p>
                                 </div>
                             ))}
                         </div>
                     </div>
                 </section>
 
-                {/* How it Works */}
-                <section id="how-it-works" className="py-24 px-6 border-t" style={{ background: "hsl(217,33%,14%)" }}>
-                    <div className="max-w-5xl mx-auto">
-                        <div className="text-center mb-16">
-                            <p className="text-accent text-sm font-bold uppercase tracking-widest mb-3">Process</p>
-                            <h2 className="text-3xl md:text-4xl font-black">How It Works</h2>
-                            <p className="text-muted mt-4 max-w-xl mx-auto">
-                                From patient arrival to consultation completion — a seamless loop in six steps.
+                {/* Methodology / How it Works */}
+                <section id="how-it-works" className="py-24 px-6 border-t bg-surface">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="text-center mb-20">
+                            <p className="text-primary-500 text-sm font-bold uppercase tracking-widest mb-3">Our Methodology</p>
+                            <h2 className="text-3xl md:text-5xl font-black tracking-tight">The Precision Lifecycle</h2>
+                            <p className="text-muted mt-4 max-w-xl mx-auto text-lg leading-relaxed">
+                                A systematic approach to patient flow management.
                             </p>
                         </div>
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
                             {steps.map((s, i) => (
                                 <div key={i} className="relative group">
-                                    <div
-                                        className="card border hover:border-primary-500/30 transition-all duration-300 hover:-translate-y-1"
-                                        style={{ background: "hsl(217,33%,17%)" }}
-                                    >
-                                        <p
-                                            className="text-5xl font-black text-transparent bg-clip-text mb-4"
-                                            style={{ backgroundImage: "linear-gradient(135deg, hsl(199,89%,48%,0.4), hsl(199,89%,48%,0.1))" }}
-                                        >
-                                            {s.num}
-                                        </p>
-                                        <h3 className="text-lg font-bold mb-2">{s.title}</h3>
-                                        <p className="text-muted text-sm leading-relaxed">{s.desc}</p>
+                                    <div className="absolute -top-10 -left-4 text-8xl font-black text-primary-500/5 select-none transition-all group-hover:text-primary-500/10">
+                                        {s.num}
+                                    </div>
+                                    <div className="relative pt-4">
+                                        <h3 className="text-xl font-bold mb-3">{s.title}</h3>
+                                        <p className="text-muted leading-relaxed">{s.desc}</p>
                                     </div>
                                 </div>
                             ))}
@@ -240,40 +131,32 @@ export default function Home() {
                 </section>
 
                 {/* CTA */}
-                <section className="py-24 px-6 text-center relative overflow-hidden border-t">
-                    <div
-                        className="absolute inset-0 -z-10"
-                        style={{
-                            background: "radial-gradient(ellipse 60% 50% at 50% 50%, hsl(199,89%,48%,0.08), transparent)",
-                        }}
-                    />
+                <section className="py-24 px-6 text-center relative overflow-hidden border-t bg-background">
                     <div className="max-w-2xl mx-auto">
                         <div className="flex justify-center mb-6">
                             {[...Array(5)].map((_, i) => (
                                 <Star
                                     key={i}
-                                    className="h-5 w-5 text-warning"
-                                    style={{ fill: "hsl(38,92%,50%)" }}
+                                    className="h-6 w-6 text-amber-400 fill-amber-400"
                                 />
                             ))}
                         </div>
-                        <h2 className="text-3xl md:text-4xl font-black mb-4">Ready to Modernise Your Clinic?</h2>
-                        <p className="text-muted mb-10 text-lg">
-                            Launch the Reception dashboard, add your doctors, and issue your first token in under a minute.
+                        <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight">Secure Your Clinical Workflow</h2>
+                        <p className="text-muted mb-12 text-xl leading-relaxed">
+                            Join the pioneering hospitals using Litsense Healthineers to eliminate waiting-room congestion.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
                                 href="/reception"
-                                className="inline-flex h-12 items-center justify-center rounded-lg bg-primary-500 hover:bg-primary-600 px-8 text-sm font-bold text-white shadow-lg transition-all hover:shadow-primary-500/30 hover:shadow-2xl hover:-translate-y-0.5"
+                                className="inline-flex h-14 items-center justify-center rounded-full bg-primary-500 hover:bg-primary-600 px-10 text-lg font-bold text-white shadow-xl shadow-primary-500/20 transition-all hover:-translate-y-1"
                             >
-                                Get Started — Reception
+                                Open Reception Hub
                             </Link>
                             <Link
                                 href="/doctor"
-                                className="inline-flex h-12 items-center justify-center rounded-lg border px-8 text-sm font-medium transition-all hover:-translate-y-0.5"
-                                style={{ background: "hsl(217,33%,17%)" }}
+                                className="inline-flex h-14 items-center justify-center rounded-full border border-border px-10 text-lg font-bold transition-all hover:bg-surface hover:-translate-y-1"
                             >
-                                Doctor Login <ArrowRight className="ml-2 h-4 w-4" />
+                                Doctor Login <ArrowRight className="ml-2 h-5 w-5" />
                             </Link>
                         </div>
                     </div>
@@ -281,21 +164,38 @@ export default function Home() {
             </main>
 
             {/* Footer */}
-            <footer className="border-t py-10 px-6">
-                <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-md bg-primary-500 flex items-center justify-center">
-                            <Activity className="h-4 w-4 text-white" />
+            <footer className="border-t py-16 px-6 bg-surface">
+                <div className="max-w-7xl mx-auto">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-10">
+                        <div className="flex flex-col items-center md:items-start gap-4 transition-all">
+                            <Logo className="h-10" />
+                            <p className="text-sm text-muted mt-2">
+                                Pioneering anaesthesia solutions for the modern age.
+                            </p>
                         </div>
-                        <span className="font-black text-lg">LITSENSE</span>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-12 text-sm text-muted font-semibold">
+                            <div className="flex flex-col gap-4">
+                                <p className="text-foreground font-black uppercase tracking-widest text-[10px]">Portal</p>
+                                <Link href="/reception" className="hover:text-primary-500 transition-colors">Reception</Link>
+                                <Link href="/doctor" className="hover:text-primary-500 transition-colors">Doctor Panel</Link>
+                                <Link href="/display" className="hover:text-primary-500 transition-colors">Public Monitor</Link>
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <p className="text-foreground font-black uppercase tracking-widest text-[10px]">Company</p>
+                                <a href="#" className="hover:text-primary-500 transition-colors">About Litsense</a>
+                                <a href="#" className="hover:text-primary-500 transition-colors">Documentation</a>
+                                <a href="#" className="hover:text-primary-500 transition-colors">Support</a>
+                            </div>
+                        </div>
                     </div>
-                    <p className="text-sm text-muted text-center">
-                        © 2026 Litsense Private Limited. All rights reserved.
-                    </p>
-                    <div className="flex gap-6 text-sm text-muted">
-                        <Link href="/reception" className="hover:text-foreground transition-colors">Reception</Link>
-                        <Link href="/doctor" className="hover:text-foreground transition-colors">Doctor</Link>
-                        <Link href="/display" className="hover:text-foreground transition-colors">Display</Link>
+
+                    <div className="mt-16 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-6 text-[12px] text-muted font-medium">
+                        <p>© 2026 Litsense Healthineers — A Division of Litsense Private Limited. All rights reserved.</p>
+                        <div className="flex gap-8">
+                            <a href="#" className="hover:text-foreground">Privacy Protocol</a>
+                            <a href="#" className="hover:text-foreground">Terms of Service</a>
+                        </div>
                     </div>
                 </div>
             </footer>

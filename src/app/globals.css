@@ -20,10 +20,22 @@
   --color-teal-100: #cff5fc;
   --color-teal-200: #a5ecf8;
   --color-teal-300: #67ddf0;
-  --color-teal-400: #22c7e0;
-  --color-teal-500: #00b4d8;
-  --color-teal-600: #0090b5;
-  --color-teal-700: #087392;
+  --color-teal-400: #2dd4bf;
+  --color-teal-500: #14b8a6;
+  --color-teal-600: #0d9488;
+  --color-teal-700: #0f766e;
+
+  --color-cyan-400: #22d3ee;
+  --color-cyan-500: #06b6d4;
+  --color-cyan-600: #0891b2;
+
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #0057b8;
+  --color-primary: var(--primary);
 
   --color-emerald: #10b981;
   --color-rose: #f43f5e;
@@ -38,24 +50,44 @@
   --animate-float: float 6s ease-in-out infinite;
   --animate-pulse-glow: pulse-glow 2s ease-in-out infinite alternate;
   --animate-shimmer: shimmer 1.8s ease-in-out infinite;
+  --animate-shake: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
 /* ── CSS Variables (Dark Theme — default) ────────────────────── */
 @layer base {
   :root {
+    --background: #ffffff;
+    --foreground: #0f172a;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --surface: #f8fafc;
+    --surface-alt: #f1f5f9;
+    --card: #ffffff;
+    --overlay: rgba(255, 255, 255, 0.9);
+    --radius: 0.5rem;
+
+    --brand-primary: #0057b8;
+    --teal: #0057b8;
+    --teal-dim: rgba(0, 87, 184, 0.08);
+    --teal-glow: rgba(0, 87, 184, 0.15);
+    --primary: #0057b8;
+  }
+
+  .dark {
     --background: #0d1b2a;
     --foreground: #e8edf3;
-    --muted: #7a8ba3;
-    --border: rgba(255, 255, 255, 0.08);
-    --surface: #132238;
-    --surface-alt: #1b2d45;
-    --card: #132238;
-    --overlay: rgba(10, 22, 40, 0.75);
-    --radius: 0.75rem;
+    --muted: #94a3b8;
+    --border: rgba(255, 255, 255, 0.12);
+    --surface: #142131;
+    --surface-alt: #1e2c3e;
+    --card: #142131;
+    --overlay: rgba(10, 22, 40, 0.85);
 
-    --teal: #00b4d8;
-    --teal-dim: rgba(0, 180, 216, 0.12);
-    --teal-glow: rgba(0, 180, 216, 0.25);
+    --brand-primary: #40e0ff;
+    --teal: #0072ce;
+    --teal-dim: rgba(0, 114, 206, 0.12);
+    --teal-glow: rgba(0, 114, 206, 0.25);
+    --primary: #40e0ff;
   }
 }
 
@@ -210,6 +242,30 @@
   }
 }
 
+@keyframes shake {
+
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
 /* ═══════════════════════════════════════════════════════════════
    ANIMATION UTILITIES
    ═══════════════════════════════════════════════════════════════ */
@@ -249,6 +305,10 @@
   animation: pulse-glow 3s ease-in-out infinite;
 }
 
+.animate-shake {
+  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
 /* ═══════════════════════════════════════════════════════════════
    GLASS MORPHISM
    ═══════════════════════════════════════════════════════════════ */
@@ -277,8 +337,8 @@
    STATUS BADGES
    ═══════════════════════════════════════════════════════════════ */
 .status-waiting {
-  background: rgba(122, 139, 163, 0.12);
-  color: #7a8ba3;
+  background: rgba(148, 163, 184, 0.15);
+  color: #94a3b8;
 }
 
 .status-called {
@@ -500,7 +560,6 @@
 }
 
 .card-interactive {
-  composes: card;
   cursor: pointer;
 }
 
@@ -557,25 +616,33 @@
 /* ═══════════════════════════════════════════════════════════════
    FORM INPUTS — Premium styling
    ═══════════════════════════════════════════════════════════════ */
-.input-field {
-  width: 100%;
-  background: var(--surface);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius);
-  padding: 0.75rem 1rem;
-  font-size: 0.875rem;
-  color: var(--foreground);
-  outline: none;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
+@layer components {
+  .input-field {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    color: var(--foreground);
+    outline: none;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
 
-.input-field:focus {
-  border-color: var(--teal);
-  box-shadow: 0 0 0 3px var(--teal-dim), 0 2px 12px var(--teal-dim);
-}
+  .input-field:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px var(--teal-dim), 0 2px 12px var(--teal-dim);
+  }
 
-.input-field::placeholder {
-  color: var(--muted);
+  .input-field::placeholder {
+    color: var(--muted);
+  }
+
+  /* Search specific input to ensure icon doesn't overlap */
+  .search-input {
+    padding-left: 2.75rem !important;
+    padding-right: 2.5rem !important;
+  }
 }
 
 .select-field {
@@ -626,4 +693,83 @@
 .sidebar-scroll::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.06);
   border-radius: 2px;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PREMIUM EMPTY STATES
+   ═══════════════════════════════════════════════════════════════ */
+.empty-state-card {
+  @apply flex flex-col items-center justify-center p-12 text-center rounded-2xl;
+  background: linear-gradient(135deg, rgba(20, 33, 49, 0.4), rgba(30, 44, 62, 0.4));
+  border: 1px dashed var(--border);
+  transition: all 0.3s ease;
+}
+
+.empty-state-card:hover {
+  border-color: var(--teal);
+  background: linear-gradient(135deg, rgba(20, 33, 49, 0.6), rgba(30, 44, 62, 0.6));
+}
+
+.empty-state-icon {
+  @apply h-16 w-16 mb-6 opacity-20 transition-all duration-500;
+  color: var(--teal);
+}
+
+.empty-state-card:hover .empty-state-icon {
+  @apply opacity-50 scale-110;
+  filter: drop-shadow(0 0 10px var(--teal-glow));
+}
+
+.empty-state-title {
+  @apply text-xl font-bold mb-2;
+  color: var(--foreground);
+}
+
+.empty-state-desc {
+  @apply max-w-xs mx-auto text-sm leading-relaxed;
+  color: var(--muted);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TOASTS (Simple implementation)
+   ═══════════════════════════════════════════════════════════════ */
+.toast-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 1000;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.75rem;
+  border-left-width: 4px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.toast-success {
+  border-left-color: #10b981;
+}
+
+.toast-error {
+  border-left-color: #f43f5e;
+}
+
+.toast-info {
+  border-left-color: #00b4d8;
 }

@@ -9,8 +9,10 @@ import { Appointment, Token, Doctor } from "@/lib/types";
 import {
     Activity, PlusCircle, Users, ClipboardList, RefreshCw,
     CheckCircle2, XCircle, Ticket, ChevronLeft, Clock, UserPlus,
-    AlertCircle, Phone, CalendarDays
+    AlertCircle, Phone, CalendarDays, LogOut
 } from "lucide-react";
+import { useAuth } from "@/lib/AuthContext";
+import Logo from "@/components/Logo";
 
 type AppointmentWithDoctor = Appointment & { doctorId: Doctor };
 
@@ -23,6 +25,7 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 export default function ReceptionDashboard() {
+    const { logout } = useAuth();
     const { doctors, loading: docsLoading } = useDoctors();
     const [selectedDoctor, setSelectedDoctor] = useState("");
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10));
@@ -151,14 +154,9 @@ export default function ReceptionDashboard() {
             {/* Top Navbar */}
             <header className="h-14 flex items-center px-6 border-b sticky top-0 z-30" style={{ background: "hsl(222,47%,9%,0.9)", backdropFilter: "blur(12px)" }}>
                 <div className="flex items-center gap-4 flex-1">
-                    <Link href="/" className="flex items-center gap-2 text-muted hover:text-foreground transition-colors">
+                    <Link href="/" className="flex items-center gap-2 text-muted hover:text-foreground transition-all hover:scale-[1.02]">
                         <ChevronLeft className="h-4 w-4" />
-                        <div className="flex items-center gap-1.5">
-                            <div className="h-6 w-6 rounded bg-primary-500 flex items-center justify-center">
-                                <Activity className="h-4 w-4 text-white" />
-                            </div>
-                            <span className="font-black text-foreground">LITSENSE</span>
-                        </div>
+                        <Logo className="h-8" />
                     </Link>
                     <span className="text-muted text-sm">/ Reception</span>
                 </div>
@@ -184,6 +182,14 @@ export default function ReceptionDashboard() {
                         className="input-field w-auto text-sm"
                         style={{ colorScheme: "dark" }}
                     />
+
+                    <button
+                        onClick={logout}
+                        className="p-2 text-muted hover:text-red-400 transition-colors ml-2"
+                        title="Logout"
+                    >
+                        <LogOut className="h-4 w-4" />
+                    </button>
                 </div>
             </header>
 
@@ -302,8 +308,8 @@ export default function ReceptionDashboard() {
                                 id={`tab-${t.key}`}
                                 onClick={() => setTab(t.key as typeof tab)}
                                 className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${tab === t.key
-                                        ? "border-primary-500 text-primary-500"
-                                        : "border-transparent text-muted hover:text-foreground"
+                                    ? "border-primary-500 text-primary-500"
+                                    : "border-transparent text-muted hover:text-foreground"
                                     }`}
                             >
                                 {t.icon} {t.label}
@@ -343,8 +349,8 @@ export default function ReceptionDashboard() {
                                                     key={t._id}
                                                     id={`queue-row-${t._id}`}
                                                     className={`card border flex items-center gap-4 py-4 transition-all hover:-translate-y-0.5 ${t.status === "serving" || t.status === "called"
-                                                            ? "border-accent/30"
-                                                            : ""
+                                                        ? "border-accent/30"
+                                                        : ""
                                                         }`}
                                                     style={t.status === "serving" || t.status === "called"
                                                         ? { background: "hsl(160,84%,39%,0.06)" }

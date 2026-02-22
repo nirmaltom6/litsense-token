@@ -8,6 +8,7 @@ import {
     Activity, Lock, Mail, Eye, EyeOff, AlertCircle,
     ArrowRight, Shield, Building2, LogIn
 } from "lucide-react";
+import Logo from "@/components/Logo";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -67,15 +68,12 @@ export default function LoginPage() {
             <div
                 className="hidden lg:flex flex-col justify-between w-[480px] p-10"
                 style={{
-                    background: "linear-gradient(135deg, hsl(199,89%,25%) 0%, hsl(222,47%,11%) 100%)",
+                    background: "linear-gradient(135deg, #0057B8 0%, #0d1b2a 100%)",
                 }}
             >
                 <div>
-                    <Link href="/" className="flex items-center gap-3 mb-16">
-                        <div className="h-10 w-10 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur">
-                            <Activity className="h-6 w-6 text-white" />
-                        </div>
-                        <span className="text-2xl font-black text-white tracking-tight">LITSENSE</span>
+                    <Link href="/" className="flex items-center gap-3 mb-16 transition-all hover:scale-[1.02]">
+                        <Logo className="h-10" />
                     </Link>
 
                     <h1 className="text-4xl font-black text-white leading-tight mb-4">
@@ -94,14 +92,14 @@ export default function LoginPage() {
                         { icon: <Lock className="h-5 w-5" />, text: "RBAC: Super Admin → Hospital Admin → Doctor → Receptionist" },
                     ].map((item, i) => (
                         <div key={i} className="flex items-center gap-3 text-white/40 text-sm">
-                            <div className="text-primary-400">{item.icon}</div>
+                            <div className="text-primary">{item.icon}</div>
                             {item.text}
                         </div>
                     ))}
                 </div>
 
-                <p className="text-white/20 text-xs">
-                    © 2026 Litsense Private Limited · Multi-Tenant SaaS
+                <p className="text-white/20 text-[10px] uppercase font-bold tracking-widest">
+                    © 2026 Litsense Healthineers — A Division of Litsense
                 </p>
             </div>
 
@@ -110,10 +108,7 @@ export default function LoginPage() {
                 <div className="w-full max-w-md">
                     <div className="text-center mb-8 lg:hidden">
                         <div className="inline-flex items-center gap-2 mb-6">
-                            <div className="h-10 w-10 rounded-xl bg-primary-500 flex items-center justify-center">
-                                <Activity className="h-6 w-6 text-white" />
-                            </div>
-                            <span className="text-2xl font-black">LITSENSE</span>
+                            <Logo className="h-10" />
                         </div>
                     </div>
 

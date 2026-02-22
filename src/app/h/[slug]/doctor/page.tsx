@@ -9,8 +9,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
     Activity, BellRing, CheckCircle2, UserX, SkipForward, Clock,
-    ChevronLeft, RefreshCw, Timer, Stethoscope, AlertTriangle
+    ChevronLeft, RefreshCw, Timer, Stethoscope, AlertTriangle,
+    Search, XCircle, LogOut
 } from "lucide-react";
+import { useAuth } from "@/lib/AuthContext";
+import Logo from "@/components/Logo";
 
 function ElapsedTimer({ startedAt }: { startedAt?: string }) {
     const [elapsed, setElapsed] = useState("0:00");
@@ -30,11 +33,15 @@ function ElapsedTimer({ startedAt }: { startedAt?: string }) {
 }
 
 export default function TenantDoctorDashboard() {
+    const { logout } = useAuth();
     const { hospitalId, hospitalName, brandColor, loading: tenantLoading } = useTenant();
     const { doctors } = useDoctors(hospitalId);
     const [selectedDoctor, setSelectedDoctor] = useState("");
     const { queue, refresh, loading } = useTokenQueue(selectedDoctor, 3000, hospitalId);
     const [actionLoading, setActionLoading] = useState<string | null>(null);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const activeTokens = queue.filter((t) => ["waiting", "called", "serving"].includes(t.status));
     const currentToken = activeTokens.find((t) => t.status === "serving" || t.status === "called");
@@ -43,11 +50,12 @@ export default function TenantDoctorDashboard() {
 
     const handleAction = async (tokenId: string, action: string) => {
         setActionLoading(`${tokenId}-${action}`);
+        setError(null);
         try {
             await fetchApi(`/tokens/${tokenId}/${action}`, { method: "PUT" });
             refresh();
         } catch (err: any) {
-            alert(`Action failed: ${err.message}`);
+            setError(err.message);
         } finally {
             setActionLoading(null);
         }
@@ -59,47 +67,96 @@ export default function TenantDoctorDashboard() {
 
     if (tenantLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center" style={{ background: "hsl(222,47%,9%)" }}>
-                <Activity className="h-8 w-8 animate-spin" style={{ color: brandColor }} />
+            <div className="min-h-screen flex flex-col items-center justify-center bg-[#0a1628]">
+                <div className="relative">
+                    <div className="absolute inset-0 blur-2xl opacity-20" style={{ background: brandColor }} />
+                    <Activity className="h-10 w-10 animate-spin relative" style={{ color: brandColor }} />
+                </div>
+                <p className="mt-4 text-muted animate-pulse font-medium tracking-wide">Initialising Terminal...</p>
             </div>
         );
     }
 
     return (
         <div className="min-h-screen bg-background text-foreground flex flex-col">
-            <header className="h-14 flex items-center px-6 border-b sticky top-0 z-30" style={{ background: "hsl(222,47%,9%,0.9)", backdropFilter: "blur(12px)" }}>
-                <Link href="/login" className="flex items-center gap-2 text-muted hover:text-foreground transition-colors mr-4">
-                    <ChevronLeft className="h-4 w-4" />
-                    <div className="h-6 w-6 rounded flex items-center justify-center" style={{ background: brandColor }}>
-                        <Activity className="h-4 w-4 text-white" />
-                    </div>
-                    <span className="font-black">{hospitalName}</span>
-                </Link>
-                <span className="text-muted text-sm mr-auto">/ Doctor</span>
-
-                <select
-                    className="select-field w-auto min-w-[220px] font-bold"
-                    value={selectedDoctor}
-                    onChange={(e) => setSelectedDoctor(e.target.value)}
-                    style={{ color: selectedDoctor ? brandColor : undefined }}
+            <header className="h-14 flex items-center px-4 md:px-6 border-b sticky top-0 z-30" style={{ background: "hsl(222,47%,12%,0.95)", backdropFilter: "blur(16px)" }}>
+                <button
+                    onClick={() => setSidebarOpen(!sidebarOpen)}
+                    className="p-2 mr-2 md:hidden text-muted hover:text-foreground transition-colors"
                 >
-                    <option value="">— Select Your Account —</option>
-                    {doctors.map((d) => (
-                        <option key={d._id} value={d._id}>{d.name} — Room {d.roomNumber}</option>
-                    ))}
-                </select>
+                    <Activity className="h-5 w-5" />
+                </button>
+
+                <Link href="/login" className="hidden sm:flex items-center gap-2 text-muted hover:text-foreground transition-colors mr-4 shrink-0 transition-all hover:scale-[1.02]">
+                    <ChevronLeft className="h-4 w-4" />
+                    <Logo className="h-8" />
+                    <span className="font-black text-sm hidden lg:inline border-l pl-3 ml-1" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>{hospitalName}</span>
+                </Link>
+                <span className="h-4 w-px bg-white/10 mx-3 hidden lg:block"></span>
+                <span className="text-muted text-[10px] font-bold uppercase tracking-[0.2em] hidden lg:inline shrink-0">Workspace / Doctor</span>
+
+                <div className="flex-1 max-w-sm mx-4 relative hidden md:block group">
+                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted group-focus-within:text-teal transition-colors" />
+                    <input
+                        type="text"
+                        placeholder="Search queue..."
+                        className="input-field search-input py-1.5 text-xs bg-black/20"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    {searchQuery && (
+                        <button
+                            onClick={() => setSearchQuery("")}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-foreground transition-colors"
+                        >
+                            <XCircle className="h-4 w-4" />
+                        </button>
+                    )}
+                </div>
+
+                <div className="ml-auto">
+                    <select
+                        className="select-field w-auto min-w-[200px] text-xs py-1.5 font-bold"
+                        value={selectedDoctor}
+                        onChange={(e) => setSelectedDoctor(e.target.value)}
+                        style={{ color: selectedDoctor ? brandColor : undefined }}
+                    >
+                        <option value="">— Select Account —</option>
+                        {doctors.map((d) => (
+                            <option key={d._id} value={d._id}>{d.name}</option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="ml-4 flex items-center">
+                    <button
+                        onClick={logout}
+                        className="p-2 text-muted hover:text-red-400 transition-colors"
+                        title="Logout"
+                    >
+                        <LogOut className="h-4 w-4" />
+                    </button>
+                </div>
             </header>
 
             {!selectedDoctor ? (
-                <div className="flex-1 flex flex-col items-center justify-center gap-6 text-muted p-8">
-                    <Stethoscope className="h-12 w-12 opacity-40" />
-                    <h2 className="text-2xl font-bold text-foreground">Select Your Account</h2>
-                    <p className="max-w-sm text-center">Pick your doctor account above to access the patient queue.</p>
+                <div className="flex-1 flex flex-col items-center justify-center gap-6 p-8">
+                    <div className="empty-state-card border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] p-16 shadow-2xl">
+                        <div className="relative mb-8">
+                            <div className="absolute inset-0 blur-3xl opacity-20 bg-teal animate-pulse" />
+                            <Stethoscope className="empty-state-icon h-24 w-24 relative" />
+                        </div>
+                        <h2 className="text-4xl font-black text-foreground mb-4 tracking-tighter">Welcome, Doctor</h2>
+                        <p className="max-w-md text-muted text-lg leading-relaxed">Please select your account from the dropdown above to manage your daily patient queue.</p>
+                    </div>
                 </div>
             ) : (
-                <div className="flex-1 grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-0">
+                <div className="flex-1 flex flex-col md:flex-row relative overflow-hidden">
                     {/* Left: Current Patient */}
-                    <aside className="border-r flex flex-col" style={{ background: "hsl(217,33%,14%)" }}>
+                    <aside
+                        className={`fixed inset-y-0 left-0 z-40 w-80 bg-[#1e2c3e] border-r flex flex-col transition-transform duration-300 md:static md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+                        style={{ background: "rgba(20, 33, 49, 0.65)", backdropFilter: "blur(20px)" }}
+                    >
                         <div className="grid grid-cols-2 gap-0 border-b">
                             {[
                                 { label: "Waiting", value: nextTokens.length, color: brandColor },
@@ -153,17 +210,34 @@ export default function TenantDoctorDashboard() {
                                     </div>
                                 </div>
                             ) : (
-                                <div className="flex-1 rounded-xl border border-dashed flex flex-col items-center justify-center py-10 text-muted">
-                                    <AlertTriangle className="h-10 w-10 mb-3 opacity-30" />
-                                    <p className="font-medium mb-1">No active patient</p>
-                                    {nextTokens.length > 0 && (
-                                        <button onClick={callNext} disabled={!!actionLoading} className="btn-primary py-3 px-6 mt-4">
-                                            <BellRing className="h-5 w-5" /> Call Next
+                                <div className="flex-1 empty-state-card py-12 border-dashed">
+                                    <AlertTriangle className="empty-state-icon h-12 w-12" />
+                                    <p className="empty-state-title text-base">No patient in consultation</p>
+                                    {nextTokens.length > 0 ? (
+                                        <button onClick={callNext} disabled={!!actionLoading} className="btn-call-next mt-6 !text-sm !py-3 !px-6 !min-h-0 !w-auto">
+                                            <BellRing className="h-5 w-5" /> Call Next Patient
                                         </button>
+                                    ) : (
+                                        <p className="empty-state-desc">The queue is currently empty.</p>
                                     )}
                                 </div>
                             )}
+
+                            {error && (
+                                <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-xs animate-shake mt-4">
+                                    {error}
+                                </div>
+                            )}
                         </div>
+
+                        {sidebarOpen && (
+                            <button
+                                onClick={() => setSidebarOpen(false)}
+                                className="md:hidden absolute top-4 -right-12 p-2 bg-black/50 rounded-full text-white"
+                            >
+                                <XCircle className="h-6 w-6" />
+                            </button>
+                        )}
                     </aside>
 
                     {/* Right: Queue */}
@@ -175,36 +249,68 @@ export default function TenantDoctorDashboard() {
                             </button>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto p-6">
-                            {nextTokens.length === 0 ? (
-                                <div className="flex flex-col items-center justify-center py-24 text-muted border border-dashed rounded-xl">
-                                    <CheckCircle2 className="h-12 w-12 mb-4 opacity-30" />
-                                    <p className="text-lg font-medium">Queue is clear</p>
+                        <div className="flex-1 overflow-y-auto p-4 md:p-6">
+                            <div className="mb-6 md:hidden">
+                                <div className="relative group">
+                                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted group-focus-within:text-teal transition-colors" />
+                                    <input
+                                        type="text"
+                                        placeholder="Search queue..."
+                                        className="input-field search-input text-sm"
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                    />
+                                    {searchQuery && (
+                                        <button
+                                            onClick={() => setSearchQuery("")}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted"
+                                        >
+                                            <XCircle className="h-4 w-4" />
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+
+                            {nextTokens.filter(t => t.patientName.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 ? (
+                                <div className="empty-state-card py-24">
+                                    <CheckCircle2 className="empty-state-icon" />
+                                    <h3 className="empty-state-title">{searchQuery ? "No matches" : "Queue is clear"}</h3>
+                                    <p className="empty-state-desc">
+                                        {searchQuery ? `We couldn't find "${searchQuery}" in the queue.` : "All patients have been served or the queue has not started yet."}
+                                    </p>
                                 </div>
                             ) : (
                                 <div className="space-y-3">
-                                    {nextTokens.map((t, i) => (
-                                        <div key={t._id} className="card border flex items-center gap-4 group transition-all hover:-translate-y-0.5">
-                                            <div className="h-10 w-10 rounded-full flex items-center justify-center font-black text-sm shrink-0"
-                                                style={{ background: i === 0 ? brandColor + "20" : "hsl(217,33%,22%)", color: i === 0 ? brandColor : undefined }}>
-                                                {i + 1}
+                                    {nextTokens
+                                        .filter(t => t.patientName.toLowerCase().includes(searchQuery.toLowerCase()))
+                                        .map((t, i) => (
+                                            <div key={t._id} className="p-4 rounded-xl border bg-card flex flex-col sm:flex-row sm:items-center gap-4 group transition-all hover:-translate-y-0.5">
+                                                <div className="flex items-center gap-4 flex-1 min-w-0">
+                                                    <div className="h-10 w-10 rounded-full flex items-center justify-center font-black text-sm shrink-0"
+                                                        style={{ background: i === 0 ? brandColor + "20" : "hsl(217,33%,22%)", color: i === 0 ? brandColor : undefined }}>
+                                                        {i + 1}
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="flex items-baseline gap-2">
+                                                            <span className="font-black text-xl md:text-2xl" style={{ color: brandColor }}>{t.tokenNumber}</span>
+                                                            <span className="font-bold truncate text-base md:text-lg">{t.patientName}</span>
+                                                        </div>
+                                                        {t.estimatedWaitTime != null && (
+                                                            <span className="text-xs text-warning flex items-center gap-1 mt-0.5 font-semibold">
+                                                                <Clock className="h-3 w-3" /> ~{t.estimatedWaitTime}m
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    onClick={() => handleAction(t._id, "call")}
+                                                    disabled={!!actionLoading || !!currentToken}
+                                                    className="btn-primary w-full sm:w-auto text-sm py-2 px-6 shadow-lg shadow-primary-500/10 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-all disabled:opacity-50"
+                                                >
+                                                    <BellRing className="h-4 w-4" /> Call Patient
+                                                </button>
                                             </div>
-                                            <div className="flex-1 min-w-0">
-                                                <span className="font-black text-lg" style={{ color: brandColor }}>{t.tokenNumber}</span>
-                                                <span className="ml-2 font-semibold">{t.patientName}</span>
-                                                {t.estimatedWaitTime != null && (
-                                                    <span className="ml-3 text-xs text-warning"><Clock className="h-3 w-3 inline" /> ~{t.estimatedWaitTime}m</span>
-                                                )}
-                                            </div>
-                                            <button
-                                                onClick={() => handleAction(t._id, "call")}
-                                                disabled={!!actionLoading || !!currentToken}
-                                                className="btn-primary text-xs py-1.5 px-3 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-50"
-                                            >
-                                                <BellRing className="h-3.5 w-3.5" /> Call
-                                            </button>
-                                        </div>
-                                    ))}
+                                        ))}
                                 </div>
                             )}
                         </div>
